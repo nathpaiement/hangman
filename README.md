@@ -8,7 +8,7 @@ Anyway, have fun with it and if you want to contribute (like adding a ASCII-art 
 
 ## RUNNING HANGMAN
 
-- download Hangman.jar
+- download [Hangman.jar](https://github.com/nathpaiement/hangman/raw/master/Hangman.jar)
 - open a terminal where you downloaded Hangman.jar
 - type: `java -jar Hangman.jar`
 - **have fun!**
