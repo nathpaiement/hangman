@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 import hangman.Dictionary;
@@ -17,17 +19,20 @@ import hangman.Dictionary;
  */
 class DictionaryParser {
 
+	final static public Path DICTIONARY_DIR = Paths.get("dictionaries");
+	final static public Path PARSED_DICTIONARY_DIR = Paths.get("src/main/resources/dictionaries/en_US");
+
 	public static void main(String[] args) {
 
 		// First pass at reading the file to get its number of lines
-		try (BufferedReader br = Files.newBufferedReader(Dictionary.Name.ORIGINAL.getPath())) {
+		try (BufferedReader br = Files.newBufferedReader(DICTIONARY_DIR.resolve("en_US.txt"))) {
 
-			Files.createDirectories(Dictionary.PARSED_DICTIONARY_DIR);
+			Files.createDirectories(PARSED_DICTIONARY_DIR);
 
 			StandardOpenOption[] options = { StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING };
-			BufferedWriter s_bw = Files.newBufferedWriter(Dictionary.Name.SHORT.getPath(), options);
-			BufferedWriter m_bw = Files.newBufferedWriter(Dictionary.Name.MEDIUM.getPath(), options);
-			BufferedWriter l_bw = Files.newBufferedWriter(Dictionary.Name.LONG.getPath(), options);
+			BufferedWriter s_bw = Files.newBufferedWriter(PARSED_DICTIONARY_DIR.resolve(Dictionary.Name.SHORT.getName()), options);
+			BufferedWriter m_bw = Files.newBufferedWriter(PARSED_DICTIONARY_DIR.resolve(Dictionary.Name.MEDIUM.getName()), options);
+			BufferedWriter l_bw = Files.newBufferedWriter(PARSED_DICTIONARY_DIR.resolve(Dictionary.Name.LONG.getName()), options);
 
 			String line;
 			boolean skip = true;

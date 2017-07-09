@@ -3,9 +3,7 @@ package hangman;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.URL;
 import java.util.Random;
 
 /**
@@ -15,39 +13,35 @@ import java.util.Random;
  */
 public class Dictionary {
 
-	final static public Path DICTIONARY_DIR = Paths.get("src/main/resources/dictionaries");
-	final static public Path PARSED_DICTIONARY_DIR = DICTIONARY_DIR.resolve("parsed/en_US");
-
 	final Name mDictionary;
 	final protected int wordCount;
-
 
 	/**
 	 * Available dictionaries
 	 */
 	public enum Name {
 
-		ORIGINAL(DICTIONARY_DIR.resolve("en_US.txt")),
-		SHORT(PARSED_DICTIONARY_DIR.resolve("short.txt")),
-		MEDIUM(PARSED_DICTIONARY_DIR.resolve("medium.txt")),
-		LONG(PARSED_DICTIONARY_DIR.resolve("long.txt"));
+		SHORT("short.txt"),
+		MEDIUM("medium.txt"),
+		LONG("long.txt");
 
-		private Path dicPath;
+		private String mName;
 
-		Name(Path path) {
-			dicPath = path;
+		Name(String name) {
+			mName = name;
 		}
 
-		public Path getPath() {
-			return dicPath;
+		public String getName() {
+			return mName;
+		}
+
+		public URL getResource() {
+			return getClass().getClassLoader().getResource("dictionaries/en_US/" + mName);
 		}
 	}
 
 	Dictionary(Name dictionary) throws IOException {
 		mDictionary = dictionary;
-		if (!Files.isRegularFile(mDictionary.getPath())) {
-			throw new IOException("The given dictionary is not available");
-		}
 		wordCount = getWordCount();
 	}
 
@@ -70,16 +64,7 @@ public class Dictionary {
 	}
 
 	protected BufferedReader getFileReader() throws IOException {
-
-		BufferedReader r = null;
-		String path = System.getProperty("java.class.path");
-
-		if (!path.equals("Hangman.jar")) {
-			r = Files.newBufferedReader(mDictionary.getPath());
-		} else {
-			r = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(mDictionary.getPath().toString())));
-		}
-
+		BufferedReader r = new BufferedReader(new InputStreamReader(mDictionary.getResource().openStream()));
 		return r;
 	}
 
